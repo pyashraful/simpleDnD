@@ -3,6 +3,16 @@ import ListItem from "@mui/material/ListItem";
 import Box from "@mui/material/Box";
 import ItemButton from "./listItem/ItemButton";
 import { Draggable, Droppable } from "@hello-pangea/dnd";
+import { styled } from "@mui/material/styles";
+
+const StyledBox = styled(Box, {
+  shouldForwardProp: (prop) => prop !== "color" && prop !== "myProp",
+})<{ myProp?: boolean; color?: string }>(({ theme, myProp, color }) => ({
+  backgroundColor: myProp ? "aliceblue" : "red",
+  color,
+
+  padding: theme.spacing(1),
+}));
 
 enum filedTypes {
   "text",
@@ -39,7 +49,12 @@ export default function SideBar({ onDragEnd, items }) {
       >
         <Droppable droppableId="availableField">
           {(provided, snapshot) => (
-            <div ref={provided.innerRef} className="h-screen">
+            <StyledBox
+              color={`${snapshot.isDraggingOver ? "red" : "green"}`}
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              className="h-screen"
+            >
               <div>
                 {items.availableField.map((item, i) => (
                   <Draggable
@@ -62,7 +77,7 @@ export default function SideBar({ onDragEnd, items }) {
                 ))}
                 {provided.placeholder}
               </div>
-            </div>
+            </StyledBox>
           )}
         </Droppable>
       </Box>
